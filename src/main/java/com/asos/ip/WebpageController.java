@@ -6,9 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class WebpageController {
 
@@ -17,22 +14,25 @@ public class WebpageController {
     }
 
     WebDriver driver;
-    Map<String, String> loginDetails = new HashMap<>();
 
     WebpageController(WebDriver driver) {
         this.driver = driver;
     }
 
-    public void scrollToFindElement(String elementName) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.name(elementName)));
+    public void waitForPageToLoadForXSeconds(int seconds) {
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
     }
 
-    public void clickElement(String elementName) {
-        driver.findElement(By.name(elementName)).click();
+
+    public void scrollToFindElement(By locator) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(locator));
+    }
+
+    public void clickElement(By locator) {
+        driver.findElement(locator).click();
     }
 
     public void enterPassword(String password) {
-        driver.findElement(By.name("action")).click();
 
         WebElement textBox = driver.findElement(By.name("password"));
 
@@ -40,10 +40,12 @@ public class WebpageController {
     }
 
 
-    public void enterEmailAddress(String emailAddress) {
+    public void enterEmailAddressAndContinue(String emailAddress) {
         WebElement textBox = driver.findElement(By.name("username"));
 
         textBox.sendKeys(emailAddress);
+
+        driver.findElement(By.name("action")).click();
     }
 
     public void navigateToHudlLoginPage() {

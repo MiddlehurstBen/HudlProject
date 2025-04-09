@@ -24,7 +24,6 @@ public class ConfigLoader {
             InputStream inputStream = ConfigLoader.class.getClassLoader().getResourceAsStream(loginDetailsConfigFile);
 
             if (inputStream == null) {
-                // Attempt to load resource using file path
                 File file = new File(loginDetailsConfigFile);
                 if (file.exists()) {
                     inputStream = new FileInputStream(file);
