@@ -5,26 +5,33 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+
 
 public class WebpageController {
 
+    public WebDriver getDriver() {
+        return driver;
+    }
+
     WebDriver driver;
+    Map<String, String> loginDetails = new HashMap<>();
 
     WebpageController(WebDriver driver) {
         this.driver = driver;
     }
 
-    private void scrollToFindElement(String elementName) {
+    public void scrollToFindElement(String elementName) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.name(elementName)));
     }
 
-    private void enterPassword(String password) {
+    public void clickElement(String elementName) {
+        driver.findElement(By.name(elementName)).click();
+    }
+
+    public void enterPassword(String password) {
         driver.findElement(By.name("action")).click();
 
         WebElement textBox = driver.findElement(By.name("password"));
@@ -32,31 +39,14 @@ public class WebpageController {
         textBox.sendKeys(password);
     }
 
-    public Map<String, String> getLoginDetails() {
-        Map<String, String> loginDetails = new HashMap<>();
 
-        Properties properties = new Properties();
-        try (BufferedReader reader = new BufferedReader(new java.io.FileReader("loginDetails.config"))) {
-
-            properties.load(reader);
-
-            loginDetails.put("email", properties.getProperty("login"));
-            loginDetails.put("password", properties.getProperty("password"));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return loginDetails;
-    }
-
-    private void enterEmailAddress(String emailAddress) {
+    public void enterEmailAddress(String emailAddress) {
         WebElement textBox = driver.findElement(By.name("username"));
 
         textBox.sendKeys(emailAddress);
     }
 
-    private void navigateToHudlLoginPage() {
+    public void navigateToHudlLoginPage() {
 
         navigateToHudlWebsite();
 
@@ -71,10 +61,14 @@ public class WebpageController {
         driver.manage().window().maximize();
     }
 
-    public void navigateToHudlWebsite() {
+    private void navigateToHudlWebsite() {
 
         driver.get("https://www.hudl.com");
 
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(3000));
+    }
+
+    public void closeBrowser() {
+        driver.quit();
     }
 }
